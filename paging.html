@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Paging</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>Paging</h1>
+<p>Paging; famously known as the hardest challenge for a newbie OSDever.</p>
+<p>TODO: Explain more in-depth</p>
+
+<h2>Virtual to Physical translation</h2>
+
+<img src="virt2phys.png"><br>
+<i>Our theorical CPU, with a nice MMU mapping 0x2000 physical address to 0x3000</i>
+<p>The virtual to physical translation happens at your leafs (that is, the lowest page table levels), the virtual address is determined by the offest of the page.</p>
+
+<p>In this example we will assume a 2-level paging, and 4KB pages, with the level 1 being the leaf pages:</p>
+<b>Leaf page</b>
+<ul>
+<li>Bytes per Page = 4096</li>
+</ul>
+
+<b>Page table</b>
+<ul>
+<li>Number of Entries = 1024 entries</li>
+<li>Bytes per Entry = (Bytes per Page * Number of Entries) = 4194304 bytes</li>
+</ul>
+
+<p>So - to recapitulate, this would be the code to represent the pages and their memory:</p>
+<pre>
+#define PAGE_ENTRIES 1024
+#define PAGE_SIZE 4096
+
+/* 1024 32-bit entries, a page table size is 4096, so 4096 / 4 = 1024 */
+typedef uint32_t page_t;
+
+/* The page table itself containing 1024 page entries */
+page_t PageTable[PAGE_ENTRIES];
+
+/* How the virtual memory could be laid out according to the page table */
+unsigned char Memory[PAGE_ENTRIES][PAGE_SIZE];
+
+/* Page 1 - Offset 0 */
+Memory[0x01][0x00] = 0;
+
+/* Page 3 - Offset 0x20 */
+Memory[0x03][0x20] = 0;
+
+/* Etcetera... */
+</pre>
+
+<p>On most sane architectures the order of the entries on a page table is sequential.</p>
+
+<p>If we mapped page 1 to 0x4000, every write done to Memory[0x00][Offset] would reflect on 0x4000 + Offset, but not on 0x0000 + Offset - this is because a page can only contain a physical address, an access to a virtual address cannot be handled by multiple entries - if the architecture is sane of course.</p>
+
+</body>
+</html>

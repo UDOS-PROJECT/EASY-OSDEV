@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>OS Principles</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>OS Principles</h1>
+<p>In this chapter we are going to analyze what is an OS among other important aspects.</p>
+<p>TODO: Explain more in-depth</p>
+
+<h2>What is an OS?</h2>
+<p>The operating system can be defined as a piece of software responsible for managing the resources of a system. This is - memory, CPU and devices - all of this is done by a central operation unit called kernel. Which helps manage those resources and hand them out as needed.</p>
+
+<p>OS development mainly focuses on the kernel itself - since applications can be ported if a proper interface is provided.</p>
+
+<h2>The reason for OSes</h2>
+<p>The need for an operating system surged when people didn't want to reinvent the wheel - they wanted a standarized API to interact with to do the same tasks they have always done but with less writing.</p>
+<p>The reason OSes mainly exists are to facilitate our interaction with a computer - allows us to request and obtain resources via a predefined API.</p>
+<p>One clear example of this behaviour is MS-DOS. It's programming interface allowed for allocating memory and read/write to the disk in a "standarized" way (for DOS programmers). Not only those "ways" were kept amongst versions, but they stayed in systems like Windows 7 (NTVDM).</p>
+<p>This is called backwards compatibility, and allows programmers use an old interface for mantaining their programs... except that the interface is old - this is the result of convenience and why most old applications never use themes like aero. They simply will not do it because... wel... why would they? - they have an old API compatible with their applications and they know the API "always" (notice the quotes) works.</p>
+<p>From writing code in assembly to drag and dropping scripts :)</p>
+
+<h2>The kernel</h2>
+<p>The kernel is the main central operation unit of any operating system - it is the piece of software responsible for the management of resources. However the way a kernel may be designed may not be the same.</p>
+
+<h3>Monolithic</h3>
+<p>The main idea behind a monolithic kernel is running all the services and drivers in the same space as the kernel - without any protection whatsoever.</p>
+
+<h3>Microkernel</h3>
+<p>This is the opposite end - microkernels hate device drivers and services - who needs those pesky NVMe drivers in the fucking kernel space?. It runs all of these services in user-mode (a less privileged mode).</p>
+
+<h3>Hybrid</h3>
+<p>A mix of both.</p>
+
+</body>
+</html>

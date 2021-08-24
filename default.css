@@ -1,0 +1,23 @@
+body {
+color:black;
+background-color:lightgrey;
+}
+
+h1, h2, h3 {
+color:white;
+text-shadow:2px 2px black;
+}
+
+a {
+color:red;
+}
+
+
+a:hover {
+color:black;
+}
+
+pre {
+background-color: cyan;
+border: 1px solid black;
+}

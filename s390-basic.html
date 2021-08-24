@@ -1,0 +1,203 @@
+<html>
+<head>
+<title>ESA S/390(X) Basics</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+<h1>ESA S/390(X) Basics</h1>
+<p>TODO: Explain more in-depth</p>
+
+<h2>Definitions</h2>
+<p>There are some key rules that have to be taken in account when coding for the 390, in short:</p>
+<ul>
+<li>Memory is called "storage"</li>
+<li>Bytes, half words, words and double words are 1, 2, 4 and 8 bytes in size respectively</li>
+<li>There are 16 registers</li>
+<li>The convention says that R15 is the stack pointer, R14 is the return value</li>
+<li>The documentation lists bits in MSB format (bit 7 of a byte is actually bit 0)</li>
+</ul>
+
+<p>The name of sizes are different than in x86:</p>
+<ul>
+<li>Byte is known as a character</li>
+<li>Halfword is what is known as a short or a word in x86 (2 bytes)</li>
+<li>A word or fullword is equal to a DWORD on x86 (4 bytes)</li>
+<li>Doubleword is equal to a QWORD on x86 (8 bytes)</li>
+</ul>
+
+<h2>Assembler syntax</h2>
+<p>Writing assembly code is like putting bricks together, you can "construct" instructions like brasl, br, b, etc. It allows you to place "constructs" after the instruction, for example "R" "qualifier" tells the instruction to operate on registers, "HI" tells the instruction to operate on a halfword immediate, "I" tells the instruction to operate on a inmmediate, and so on.</p>
+<p>GAS allows you to specify registers in any way you want:</p>
+<pre>
+# Pseudo-AT&amp;T syntax
+larl %r14, myData
+
+# NASM-like
+larl r14, myData
+
+# Only number
+larl 14, myData
+</pre>
+<p>"Insert" means to place a value on the given register, some common instructions are:</p>
+
+<table>
+<tr>
+<th width="10%">Name</th>
+<th width="10%">Operands</th>
+<th width="20%">Full name</th>
+<th width="20%">Description</th>
+</tr>
+
+<tr>
+<td><b>BRASL</b></td>
+<td><i>[register], [address]</i></td>
+<td><p>Branch And Save Link</p></td>
+<td><p>Will save the current PC (after BRASL) in register, then branch into the specified address</p></td>
+</tr>
+
+<tr>
+<td><b>BR</b></td>
+<td><i>[register]</i></td>
+<td><p>Branch Register</p></td>
+<td><p>Will jump to the address contained in the register</p></td>
+</tr>
+
+<tr>
+<td><b>IPM</b></td>
+<td><i>[register]</i></td>
+<td><p>Insert Program Mask</p></td>
+<td><p>Will load the program mask into the given register, you can shift by 28 bits to obtain the CC flag</p></td>
+</tr>
+
+<tr>
+<td><b>SRL</b></td>
+<td><i>[register], [immediate]</i></td>
+<td><p>Shift Right Link</p></td>
+<td><p>Will shift register to the right by the amount specified by the immediate</p></td>
+</tr>
+
+<tr>
+<td><b>SLL</b></td>
+<td><i>[register], [immediate]</i></td>
+<td><p>Shift Left Link</p></td>
+<td><p>Same as above, but with the left side instead</p></td>
+</tr>
+
+<tr>
+<td><b>LARL</b></td>
+<td><i>[register], [address]</i></td>
+<td><p>Load Address into Register Link</p></td>
+<td><p>Will load the specified address into the specified register</p></td>
+</tr>
+
+<tr>
+<td><b>LHI</b></td>
+<td><i>[register], [half-word immediate]</i></td>
+<td><p>Loads a Half-word Immediate</p></td>
+<td><p>Loads the immediate into the specified register</p></td>
+</tr>
+
+<tr>
+<td><b>AHI</b></td>
+<td><i>[register], [half-word immediate]</i></td>
+<td><p>Add a Half-word Immediate</p></td>
+<td><p>Adds the immediate into the specified register</p></td>
+</tr>
+
+<tr>
+<td><b>SHI</b></td>
+<td><i>[register], [half-word immediate]</i></td>
+<td><p>Subtract a Half-word Immediate</p></td>
+<td><p>Subtract the immediate from the specified register</p></td>
+</tr>
+
+<tr>
+<td><b>OHI</b></td>
+<td><i>[register], [half-word immediate]</i></td>
+<td><p>ORs a Half-word Immediate</p></td>
+<td><p>ORs the immediate into the specified register</p></td>
+</tr>
+
+<tr>
+<td><b>NHI</b></td>
+<td><i>[register], [half-word immediate]</i></td>
+<td><p>ANDs a Half-word Immediate</p></td>
+<td><p>ANDs the immediate into the specified register</p></td>
+</tr>
+
+<tr>
+<td><b>C</b></td>
+<td><i>[register], [register]</i></td>
+<td><p>Compare</p></td>
+<td><p>Compares a register with another register</p></td>
+</tr>
+
+<tr>
+<td><b>BNE</b></td>
+<td><i>[address]</i></td>
+<td><p>Branch if Not Equal</p></td>
+<td><p></p></td>
+</tr>
+
+<tr>
+<td><b>BNZ</b></td>
+<td><i>[address]</i></td>
+<td><p>Branch if Not Zero</p></td>
+<td><p></p></td>
+</tr>
+
+<tr>
+<td><b>BZ</b></td>
+<td><i>[address]</i></td>
+<td><p>Branch if Zero</p></td>
+<td><p></p></td>
+</tr>
+
+<tr>
+<td><b>BE</b></td>
+<td><i>[address]</i></td>
+<td><p>Branch if Equal</p></td>
+<td><p></p></td>
+</tr>
+</table>
+
+<h2>High Level Assembler</h2>
+<p>Normally in S390 the assembly is done via HLASM, however most people prefer to use tools such as GAS. But sometimes you need to translate HLASM code to GAS</p>
+<p>This is just a short description</p>
+
+<h3>Data Constant</h3>
+<p>Data Constant (abbreviated as DC) defines a constant which will be put in the final binary</p>
+<pre>
+* Insert a halfword
+        DC X'00FF'
+
+* Insert a character
+        DC X'0F'
+</pre>
+
+<h3>Data S</h3>
+<p>Data S does not insert a constant into the final binary, however it is commonly used for alignment purpouses</p>
+<pre>
+* Pads to the half word boundary
+        DS 0H
+
+* 2 uninitialized characters
+        DS CL2
+</pre>
+<p>I don't know what the S stands for, perhaps Static?, Storage?</p>
+
+<h3>Macros</h3>
+<p>HLASM uses macros <b>too often</b>, you'll see definitions like FLCIOA or FLCNPSW and such around HLASM code, those are part of macro libraries. However here is a small set of them defined in GAS syntax:</p>
+<pre>
+.equ AMBIT,    0x80000000
+.equ FLCCAW,   0x48
+.equ FLCSNPSW, 0x60
+.equ FLCPNPSW, 0x68
+.equ FLCINPSW, 0x78
+.equ FLCMNPSW, 0x70
+.equ FLCIOA,   0xB8
+</pre>
+
+</body>
+</html>

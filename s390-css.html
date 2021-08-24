@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>ESA S/390(X) Channel SubSystem</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>ESA S/390(X) Channel SubSystem</h1>
+
+<p>The channel subsystem in the ESA S/390(x) is the system responsible for communication between the devices and the operating system.</p>
+<p>One of the most confusing aspects of the CSS is that it uses chains of commands instead of a sequential execution; in short: it uses multiple commands at once instead of only one command at a time (for example, in x86, I/O bound instructions can only output 1 element at a time).</p>
+<p>The CSS can be viewed as a DMA device with command chains.</p>
+<p>The execution of CSS commands is sequential. The commands are executed in the order they appear.</p>
+
+<h2>Sample command chain</h2>
+<img style="float:left" width="20%" src="s390-ccw.png">
+<section style="float:left;width:80%">
+<ul>
+<li>Data is coloured blue</li>
+<li>Command chain is coloured yellow</li>
+<li>Address markers are coloured purple</li>
+<li>Green arrows reference the ADDRESS field of the CCW</li>
+<li>Blue arrows reference the LENGTH element of the CCW (if such CCW is pointing to the address marker of course)</li>
+</ul>
+
+<p>Please note that HH1 == HH2 and CC1 == CC2. The reason why they are duplicate is to separate the SEEK and SEARCH CCW parameters.</p>
+<p>Let's decompose what this chain does:</p>
+<ul>
+<li>First the SEEK command will seek to the specified cylinder and head (CC1 and HH1)</li>
+<li>Then the SEARCH command will search the cylinder, head and record specified in CCHHR</li>
+<li>The second SEARCH command purpouse is unknown(?). Presumably to retry the last command operation if it fails</li>
+<li>The last and most valuable of all: the LD command, shorthand for Length of Data, describes the length of the read operation - it also holds the buffer to where the read operation shall write to</li>
+</ul>
+
+<p>You should be familiar with s390 assembler, if not you can see the <a href="s390-basic.html">introduction</a> page.</p>
+<p>Below there is a bunch of code for doing a DASD read operation:</p>
+
+<p>Now what do is basically saving the arguments in the BBCCHHCCHHR data area so the commands can properly use them.</p>
+<pre>
+# Read a block from the DASD
+# r1 = Device number (subchannel id)
+# r2 = Head
+# r3 = Cylinder
+# r4 = Record
+# r5 = Buffer
+# r6 = Size of buffer
+read_block:
+    lr %r12, %r15
+    lr %r10, %r1                # Save device number in r10
+    stcm %r2, 0b0011, rb_cc1    # Cylinder
+    stcm %r2, 0b0011, rb_cc2
+    stcm %r3, 0b0011, rb_hh1    # Head
+    stcm %r3, 0b0011, rb_hh2
+    stc %r4, rb_record # Record
+    lr %r2, %r5                 # Buffer
+    lr %r7, %r6                 # Bytes to read
+    st %r2, rb_ldccw + 4        # Overwrite LD.addr to point to our buffer
+    sth %r7, rb_ldccw + 2       # And set the size too
+</pre>
+
+<p>We are going to save a PSW which will point to rb_count, this means that once an interrupt signaling the success of the read operation occurs, we will jump to rb_count</p>
+<pre>
+    mvc FLCINPSW(8), rb_newio
+    stosm FLCINPSW, 0x00
+</pre>
+
+<p>Now we are going to put the first command of the chain into FLCCAW</p>
+<pre>
+    la %r3, rb_seek
+    st %r3, FLCCAW
+</pre>
+
+<p>Remember when we stored the device number in r10? Well, all CSS operations in S390 require r1 to be filled with the device number!</p>
+<pre>
+    lr %r1, %r10
+</pre>
+
+<p>IRB must be an area of 24 words, we don't need to initialize it, however we need to consume any pending interrupt before requesting execution</p>
+<pre>
+    la %r9, rb_irb
+    tsch 0(%r9)
+    ipm %r11                    # Error checking, if the CC is not zero then an error occoured (see Principles of Operation for error codes)
+    srl %r11, 28
+    c %r11, %r11
+    bnz fatal_error
+</pre>
+
+<p>Now, we will request execution of our command chain, ORB must be initialized and point to the first command in the chain</p>
+<pre>
+    la %r10, rb_orb
+    ssch 0(%r10)
+    ipm %r11
+    srl %r11, 28
+    c %r11, %r11
+    bnz fatal_error
+</pre>
+
+<p>We are now going to wait for a response from the device</p>
+<pre>
+    lpsw rb_wtnoer
+</pre>
+
+<p>When the device answers it will jump to this label, notice that labels in PSWs must be aligned to a word-boundary</p>
+<pre>
+.align 4
+rb_count:
+</pre>
+
+<p>Finally, we are going to see if the operation succeded at all</p>
+<pre>
+    tsch 0(%r9)
+    ipm %r11
+    srl %r11, 28
+    c %r11, %r11
+    bnz fatal_error
+
+    sh %r7, 10(%r9)
+    lr %r15, %r7
+    clc 4(4, %r9), rb_end_chain
+    be rb_end
+rb_end:
+    br %r14
+</pre>
+
+<a href="https://github.com/SuperLeaf1995/UDOS/blob/e89d9b05c9e19725d59334fcb96c47f03754351a/ipl_loader/boot.S">Source code</a>
+
+</section>
+
+</body>
+</html>
