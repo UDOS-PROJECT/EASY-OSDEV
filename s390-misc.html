@@ -1,0 +1,18 @@
+<html>
+
+<head>
+    <title>ESA S/390(X) Misc</title>
+    <link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+<h1>ESA S/390(X) Misc</h1>
+<p>Extra stuff!</p>
+
+<h2>Detecting available memory</h2>
+<p>Do manual probing. In series of 1 MiB check memory until an exception is recognized.</p>
+
+<h2>Activating AM64</h2>
+<p>In order to activate AM64, the higher word of the PSW should set it's first bit to 1, while the lower word has 0x80000000 OR'ed with the address.</p>
+</body>
+</html>
