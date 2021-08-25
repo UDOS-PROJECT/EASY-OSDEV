@@ -1,11 +1,12 @@
 body {
 color:black;
 background-color:lightgrey;
+font-family: "Times New Roman", Times, serif;
 }
 
 h1, h2, h3 {
 color:white;
-text-shadow:2px 2px black;
+text-shadow:2px 1px black;
 }
 
 a {
@@ -15,9 +16,10 @@ color:red;
 
 a:hover {
 color:black;
+background-color:yellow;
 }
 
 pre {
 background-color: cyan;
-border: 1px solid black;
+border:1px solid black;
 }

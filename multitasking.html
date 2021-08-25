@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>Multitasking</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>Multitasking</h1>
+<p>TODO: Explain more in-depth</p>
+
+<h2>Processes vs. Threads</h2>
+<p>In short: A process is an abstract type of a task that has it's own address space, while a thread has their own registers and stack.</p>
+<p>TODO: Explain more in-depth</p>
+
+<h2>Context Switches</h2>
+<p>A context switch is done when all registers are loaded from storage (the state) into the current registers, this also includes switching address spaces (if paging is used) by pointing to a new root page table, which can be or not saved in the state along with the registers.</p>
+<p>In some architectures extra space is required to save the state of vector registers, for example in x86, the SSE instructions uses about 256-bytes to save the vector registers on a state.</p>
+<p>Context switches are costly; however running 1 process while it's doing nothing for a prolonged time may result to be a very bad latency. Various algorithms exist for this task:</p>
+
+<h3>Round robin scheduling</h3>
+<p>Basic form of scheduling, go to next process and when we are at the tail process we go back to the head.</p>
+
+<h3>*NIX scheduling</h3>
+<p>So we are going to punish processes who use more CPU time!</p>
+
+<h3>Priority scheduling</h3>
+<p>Some processes have more priority than others, processes with similar priority can be handled by an algorithm to sort them.</p>
+
+</body>
+</html>

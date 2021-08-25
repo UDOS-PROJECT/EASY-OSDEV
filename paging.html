@@ -12,8 +12,10 @@
 
 <h2>Virtual to Physical translation</h2>
 
-<img src="virt2phys.png"><br>
-<i>Our theorical CPU, with a nice MMU mapping 0x2000 physical address to 0x3000</i>
+<img style="float:left;width:20%" src="virt2phys.png"><br>
+
+<section style="float:left;width:80%">
+<p>(On the left, our theorical CPU, with a nice MMU mapping 0x2000 physical address to 0x3000)</p>
 <p>The virtual to physical translation happens at your leafs (that is, the lowest page table levels), the virtual address is determined by the offest of the page.</p>
 
 <p>In this example we will assume a 2-level paging, and 4KB pages, with the level 1 being the leaf pages:</p>
@@ -54,6 +56,24 @@ Memory[0x03][0x20] = 0;
 <p>On most sane architectures the order of the entries on a page table is sequential.</p>
 
 <p>If we mapped page 1 to 0x4000, every write done to Memory[0x00][Offset] would reflect on 0x4000 + Offset, but not on 0x0000 + Offset - this is because a page can only contain a physical address, an access to a virtual address cannot be handled by multiple entries - if the architecture is sane of course.</p>
+
+<h2>Virtual Space</h2>
+<p>The page table and the parts that it maps is known as the <b>Virtual Space</b> or <b>Address Space</b>.</p>
+<p>On modern operating systems an unique virtual space is given to each program, the address space contains ELF files, libraries and other dependencies the program may have.</p>
+
+<h3>1 library = 10 virtual libraries</h3>
+<p>In order to save space, the operating system can load a library on a physical location, then map it along the programs that use it as if the library was "loaded" along the program. This works well except when libraries depend on global states.</p>
+
+<h3>Page colouring</h3>
+<p>In some architectures, the top bits of a virtual address are taken by the cache to cache the latest used page per X pages. You can use this technique to put high-priority pages into an address that is aligned to the cache's requirements, normally 255 coloured pages can exist in a system.</p>
+
+<h3>Swap</h3>
+<p>Swap consists in accessing non-existant pages (by reporting them as being available to the application), trapping the accesses and then swapping the data to the disk - this takes a lot of time to do and creates something called overcommitment, where the system may run out of RAM and the disk may be used for extra memory.</p>
+
+<h3>Context Switches</h3>
+<p>Optimizations to context switches is describes in <a href="multitasking.html">multitasking</a>.</p>
+
+</section>
 
 </body>
 </html>

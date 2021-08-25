@@ -12,6 +12,40 @@
 <p>One of the most confusing aspects of the CSS is that it uses chains of commands instead of a sequential execution; in short: it uses multiple commands at once instead of only one command at a time (for example, in x86, I/O bound instructions can only output 1 element at a time).</p>
 <p>The CSS can be viewed as a DMA device with command chains.</p>
 <p>The execution of CSS commands is sequential. The commands are executed in the order they appear.</p>
+<p>CSS addresses are real, this means that all addresses are physical and are not bound to the current virtual space.</p>
+
+<h2>CCW Commands</h2>
+<p>There are 2 types of CCWs, however CCW0 is only used by SIO/TIO instruction (pre-S390) and CCW1 is used by S390 and above:</p>
+<pre>
+// Format 0 Control Command Word
+struct css_ccw0 {
+  uint8_t cmd;
+  uint16_t lo_addr;
+  uint8_t hi_addr;
+  uint8_t flags;
+  uint8_t reserved;
+  uint16_t count;
+} __attribute__((packed));
+
+// Format 1 Control Command Word
+struct css_ccw1 {
+  uint8_t cmd;
+  uint8_t flags;
+  uint16_t count;
+  uint32_t addr;
+} __attribute__((packed));
+</pre>
+
+<h2>Types of commands</h2>
+<h3>SEEK (0x07)</h3>
+<p>Address points to a BBCCHH field (that is, 1 unused halfword, 1 halfword denoting cylinders and another halfword denoting heads). The count should be the size of the BBCCHH (6)</p>
+<h3>SEARCH (0x31)</h3>
+<p>This will perform a search on the disk (something akin to a seek, but done on the track); Address points to a CCHHR field (that is, 1 halfword denoting cylinders, 1 halfword denoting heads and a character denoting record number). The coount should be the size of the CCHHR (5)</p>
+<h3>Transfer In Channel (0x08)</h3>
+<p>Jumps to the address field if an error occurs during a SEARCH on the DASD - when the operation is sucessful this command is skipped.</p>
+<p>TIC will loop infinitely when SEARCH fails, when the DASD detects that it has read the entire track it will abnormally exit the channel program.</p>
+<h3>Read key and Data (0x0E)</h3>
+<p>Address is used to point to the destination buffer and length is used to denote the length of data to read.</p>
 
 <h2>Sample command chain</h2>
 <img style="float:left" width="20%" src="s390-ccw.png">

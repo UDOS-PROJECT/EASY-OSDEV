@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Virtual Filesystem</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+<h1>Virtual Filesystem</h1>
+
+<p>A virtual filesystem is a way to track files on a system. There are various kinds of VFS, including:</p>
+
+<h2>*NIX-style</h2>
+<p>A *NIX-style VFS represents every device and every file as a "node" that can have children (folders) or not (files, pipes, etc).</p>
+<p>A node can "handle" other nodes (mount points), the system needs to keep track of which nodes are mounted by which.</p>
+<p>Example:</p>
+<pre>
+/dev/mnt0 (Loopback mountpoint, associated to /dev/file.txt)
+	-> /media/mount/test
+	-> /media/mount/abc
+	-> /media/mount/folder
+		-> /media/mount/folder/sys
+</pre>
+<p>In this case writes and reads to /dev/mnt0 are mapped to the file /dev/file.txt</p>
+
+<h2>DOS-style</h2>
+<p>Instead of having mounts anywhere, we have drive letters, where every drive letter is a mountpoint with a driver.</p>
+<p>Example:</p>
+<pre>
+C:\ (mountpoint by NVMe driver)
+	-> C:\some\file
+	-> C:\file.txt
+
+D:\ (loopback)
+	-> D:\test.txt
+</pre>
+
+<p>TODO: Explain more in-depth</p>
+
+</body>
+</html>
