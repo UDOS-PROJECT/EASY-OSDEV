@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>IPL (aka. the bootloader)</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>IPL (aka. the bootloader)</h1>
+<p>The IPL (Initial Program Loader) is responsible for loading the kernel from the media it was loaded on (commonly a DASD disk).</p>
+
+<p>Code of the IPL can be found on the main repository, there are two versions, one is the <a href="https://github.com/udos-project/UDOS/blob/917c5ddc89f8bc3aacc727b655df574fc186cd84/ipl_loader/ipl_loader.S">ESA S/390</a> (31-bits) and the other is the <a href="https://github.com/udos-project/UDOS/blob/ec59580efa63829741d3d7ee959b432aca79a981/ipl/ipl.S">Z/ARCH</a> (64-bits). Please note that the z/Arch build must be compiled as if it was 31 bits. This also applies to the kernel itself.</p>
+
+<h2>Flatboot</h2>
+<p>There is an ongoing project to port the stivale protocol to ESA S/390 systems, this is called <a href="https://github.com/udos-project/flatboot">Flatboot</a>. The goal is to allow kernel developers to not worry about the IPL and just do what matters.</p>
+
+<p></p>
+
+<a href="mos-ch0.html">Previous</a>
+<a href="mos-ch2.html">Next</a>
+
+</body>
+</html>

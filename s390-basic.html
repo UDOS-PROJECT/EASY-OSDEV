@@ -199,5 +199,8 @@ larl 14, myData
 .equ FLCIOA,   0xB8
 </pre>
 
+<h3>Operation modes and states</h3>
+<p>There are 2 states that may be useful to know, the problem state and the supervisor state. The problem state does not allow unprivileged execution of applications - this resembles usermode and can be used to "jail" rogue kernel modules. The supervisor state has full control over the machine and is usually where your kernel will run.</p>
+
 </body>
 </html>

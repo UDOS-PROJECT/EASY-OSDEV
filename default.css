@@ -1,18 +1,31 @@
+html {
+background-color:lightgray;
+}
+
 body {
 color:black;
-background-color:lightgrey;
+background-color:white;
 font-family: "Times New Roman", Times, serif;
+border: 1px solid black;
+margin-left: 30%;
+margin-right: 30%;
+box-shadow:16px 16px darkgrey;
+padding: 16px;
 }
 
 h1, h2, h3 {
-color:white;
-text-shadow:2px 1px black;
+color:blue;
+text-shadow:2px 1px darkgrey;
 }
 
 a {
 color:red;
 }
 
+img {
+border:1px solid black;
+margin:8px;
+}
 
 a:hover {
 color:black;
@@ -22,4 +35,6 @@ background-color:yellow;
 pre {
 background-color: cyan;
 border:1px solid black;
+width:100%;
+overflow-x:scroll;
 }

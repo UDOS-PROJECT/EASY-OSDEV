@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>Introduction</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>Introduction</h1>
+<p>The mainframe is a computer specialized on batch processing, a conventional PC is used for purpouses such as graphic processing or lightweight computing. Mainframes depend on parallelization and without that they are pretty weak. With batch processing the mainframes uses a software that is something like a job scheduler. The purpouse of this is to allocate cores of the mainframe for performing a certain task in batches. For example a job to sum 1+1 (with a COBOL/REXX program or whatever) would do that task in batch.</p>
+<p>When designing an operating system for a mainframe one has to take in account that multicore scheduling is a <b>very important thing to do</b>.</p>
+<p>And with all of that, mainframes have devices which are not like your conventional USB mouse, they can be anything and there is no notice of when it can be removed</p>
+
+<h2>Define your goal</h2>
+<p>Do you want a microkernel that is very resitant to rogue modules - or do you want a monolithic kernel that prioritizes speed over reliability?</p>
+<p>It's all up to you. A networking kernel may be an interesting approach. Kernels with a graphical user interface in the mainframe world are rare - if they even exist - but they may be very interesting as well.</p>
+<p>You may also want an ultra-portable kernel which can run in any computer including mainframes.</p>
+<p>Or perhaps write a kernel with backwards compatibility with MVS/TPF?</p>
+<p>You can also try to run an hypervisor to run z/Linux atop of your kernel.</p>
+
+<a href="mos-ch1.html">Next</a>
+
+</body>
+</html>
