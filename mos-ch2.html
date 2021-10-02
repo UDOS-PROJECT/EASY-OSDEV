@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Supervisor call</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>Supervisor call</h1>
+<p>Your kernel needs a way to expose her management operations to the applications that are running on the userspace.</p>
+<p>When an application wants to read a file it has to call the kernel which then will give them something like a file handler or an GUID, or whatever you have in mind, it's your SVC ABI after all.</p>
+
+<p>Now you need to setup a SVC handler:</p>
+<p>All of the supervisor calls set the PSW dictated by real locations 0x1C0 (z/Arch) or 0x60 (ESA S/390), with a size of 16 and 8 respectively.</p>
+
+<p>As you have seen on the <a href="s390-misc.html">misc page</a> you can see the structure of both PSW formats, you just have to point to the asm stub of your supervisor call and you are ready to go.</p>
+
+<h2>The stub</h2>
+
+<p>We are going to first declare our stub and make it globally visible so we can access it from our kernel</p>
+<pre>
+.globl svc_handler_stub
+svc_handler_stub:
+</pre>
+
+<p>Finally we are going to load our own interrupt stack and jump into the function (the interrupt stack will be initially cleared by an initial entry code, that would clear the bss)</p>
+<pre>
+    stmg %r0, %r15, reg_area # Save all registers
+    larl %r15, int_stack_top
+    brasl %r14, svc_handler # Call our handler
+    lmg %r0, %r15, reg_area # Reload all registers
+    lpsw 320 # Load old PSW
+</pre>
+
+<p>And this would be our data we will require (not multithread safe, but it's a good start!)</p>
+<pre>
+.section .bss
+svc_reg_args:
+    .skip 128
+
+int_stack_bottom:
+    .skip 4096
+int_stack_top:
+</pre>
+
+<p></p>
+
+<a href="mos-ch1.html">Previous</a>
+<a href="mos-ch3.html">Next</a>
+
+</body>
+</html>

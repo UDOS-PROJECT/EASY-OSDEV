@@ -9,6 +9,78 @@
 <h1>ESA S/390(X) Misc</h1>
 <p>Extra stuff!</p>
 
+<h2>MSB bits</h2>
+<p>Probably a weird thing to everyone not familiar with MSB bit ordering, so an utility macro has been made to circumvent this:</p>
+
+<h2>Program state words</h2>
+<pre>
+// ESA S390 PSW
+struct s390_psw {
+    uint32_t flags;
+    uint32_t address;
+} __attribute__((packed, aligned(8)));
+
+// z/Arch PSW
+struct s390x_psw {
+    uint32_t hi_flags;
+    uint32_t lo_flags; /* It's all zero except for the first bit (in S/390 order of course) */
+    uint32_t hi_address;
+    uint32_t lo_address;
+} __attribute__((packed, aligned(8)));
+</pre>
+
+<h2>1-single instruction context save</h2>
+<p>With 1 single instruction you can load all registers and save them as you wish, this only seems to work with general registers and not with floating point ones through. However this already makes a sane hardware context switch mechanism</p>
+<pre>
+# Saving
+stmg %r0, %r15, reg_area
+
+# Loading
+lmg %r0, %r15, reg_area
+
+.section .bss
+reg_area:
+    .skip 128
+</pre>
+
+<h2>PSW flags</h2>
+<p>Note: Flags have been only tested on Z/ARCH</p>
+<p>TODO: Test more extensively</p>
+<pre>
+/* Note that AM24 and AM31 have to be along with the instruction address (in a
+ * 128-bit PSW they have to be on the low part of the flags */
+#define S390_PSW_AM24 0x00000000
+#define S390_PSW_AM31 0x80000000
+#define S390_PSW_AM64 0x00000001
+
+/* This varies depending on the given system build */
+#define S390_PSW_DEFAULT_AMBIT (S390_PSW_AM31)
+
+/* See Figure 4.2 of Chapter 4. (page 141) of the z/Arch Principles of Operation
+ * for a more detailed overview about the structure of the PSW */
+
+/* Program event recording - this is for debugging stuff */
+#define S390_PSW_PER(x) ((x) << S390_BIT(32, 1))
+
+/* Controls dynamic address translation */
+#define S390_PSW_DAT(x) ((x) << S390_BIT(32, 5))
+
+/* I/O interrupt mask */
+#define S390_PSW_IO_INT(x) ((x) << S390_BIT(32, 6))
+
+/* External interrupt mask stuff like processor signals and clocks */
+#define S390_PSW_EXTERNAL_INT(x) ((x) << S390_BIT(32, 7))
+
+/* Enable machine check interrupts */
+#define S390_PSW_ENABLE_MCI(x) ((x) << S390_BIT(32, 13))
+
+/* Makes the processor halt until an interrupt comes */
+#define S390_PSW_WAIT_STATE(x) ((x) << S390_BIT(32, 14))
+
+/* Problem state - aka. userland switch */
+#define S390_PSW_PROBLEM_STATE(x) ((x) << S390_BIT(32, 15))
+</pre>
+
 <h2>Detecting available memory</h2>
 <p>Do manual probing. In series of 1 MiB check memory until an exception is recognized.</p>
 

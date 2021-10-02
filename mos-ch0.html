@@ -11,6 +11,9 @@
 <p>When designing an operating system for a mainframe one has to take in account that multicore scheduling is a <b>very important thing to do</b>.</p>
 <p>And with all of that, mainframes have devices which are not like your conventional USB mouse, they can be anything and there is no notice of when it can be removed</p>
 
+<h2>Target audience</h2>
+<p>This guide is intended towards seasoned OS developers who know the theory behind operating systems - this guide assumes the reader already knows what a stream is, why a memory allocator is important for dynamic management and in general the theory behind managing the resources of a machine as an abstraction (aka. theory behind a HAL), etc. If you don't know those concepts the <a href="https://wiki.osdev.org">OSDev Wiki</a> is a pretty good place to learn the theory behind operating systems.</p>
+
 <h2>Define your goal</h2>
 <p>Do you want a microkernel that is very resitant to rogue modules - or do you want a monolithic kernel that prioritizes speed over reliability?</p>
 <p>It's all up to you. A networking kernel may be an interesting approach. Kernels with a graphical user interface in the mainframe world are rare - if they even exist - but they may be very interesting as well.</p>
