@@ -27,5 +27,11 @@
 <h3>Priority scheduling</h3>
 <p>Some processes have more priority than others, processes with similar priority can be handled by an algorithm to sort them.</p>
 
+<h2>Threads, Tasks and Jobs</h2>
+<p>A thread can be viewed as a person doing a work (let's say, cultivate rice), a task can be tought as the farm where they cultivate, and a job is the locality where they live.</p>
+<p>Threads mostly have their own stack but share their parent task heap, they also have their own register contextes and program counter.</p>
+<p>Tasks will have their own heap and usually their list of threads.</p>
+<p>Jobs can hold many tasks which will run sequentially or parallel if you wish.</p>
+
 </body>
 </html>

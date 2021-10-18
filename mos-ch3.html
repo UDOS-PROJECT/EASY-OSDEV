@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>Telnet time!</title>
+<link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+<h1>Telnet time!</h1>
+<p>Tired of boring DIAG8 commands, want to communicate with the real world?</p>
+
+<p>Well you can do it NOW!. Telnet is the best protocol to start with, you don't need to code any TCP/IP stack or such because the terminal will simply assume a BSC communication line (no overcomplicated IP stuff or messy ethernet)</p>
+
+<p>So add a 2703 device to your Hercules configuration like shown here:</p>
+<pre>
+00B0        2703        lport=3780 rhost=localhost rport=3270 dial=no
+</pre>
+
+<p>Replace localhost and the rport with any telnet sevrer of your choice.</p>
+
+<p>Then simply send a write command chain word to the telnet device, example code can be found <a href="https://github.com/udos-project/UDOS/blob/3f446f4117d78fddf181f1df2927a9437fb08035/kernel/s390/x2703.c">here</a></p>
+
+<h2>Enabling the console</h2>
+<pre>
+int x2703_enable(
+    struct x2703_info *info)
+{
+    struct css_request *req;
+    req = css_new_request(&info->dev, 1);
+    req->ccws[0].cmd = 0x27;
+    req->ccws[0].addr = 0;
+    req->ccws[0].flags = 0;
+    req->ccws[0].length = 0;
+
+    info->dev.orb.flags = 0x0080FF00;
+    req->flags = CSS_REQUEST_MODIFY | CSS_REQUEST_IGNORE_CC;
+
+    css_send_request(req);
+    css_do_request(req);
+    css_destroy_request(req);
+    return 0;
+}
+</pre>
+
+<h2>Writing to the console</h2>
+<pre>
+int x2703_write(
+    struct vfs_handle *hdl,
+    const void *buf,
+    size_t n)
+{
+    struct x2703_info *drive = hdl->node->driver_data;
+    struct css_request *req;
+    int r;
+    
+    req = css_new_request(&drive->dev, 1);
+
+    req->ccws[0].cmd = CSS_CMD_WRITE;
+    req->ccws[0].addr = (uint32_t)buf;
+    req->ccws[0].flags = 0;
+    req->ccws[0].length = (uint16_t)n;
+
+    drive->dev.orb.flags = 0x0080FF00;
+    req->flags = CSS_REQUEST_MODIFY;
+
+    css_send_request(req);
+    r = css_do_request(req);
+    css_destroy_request(req);
+    return r;
+no_op:
+    kprintf("x2703: Not operational - terminal was disconnected?\n");
+    return -1;
+}
+</pre>
+
+<h2>Reading the console</h2>
+<pre>
+int x2703_read(
+    struct vfs_handle *hdl,
+    void *buf,
+    size_t n)
+{
+    struct x2703_info *drive = hdl->node->driver_data;
+    struct css_request *req;
+    int r;
+    
+    req = css_new_request(&drive->dev, 1);
+
+    req->ccws[0].cmd = CSS_CMD_READ;
+    req->ccws[0].addr = (uint32_t)buf;
+    req->ccws[0].flags = 0;
+    req->ccws[0].length = (uint16_t)n;
+
+    drive->dev.orb.flags = 0x0080FF00;
+    req->flags = CSS_REQUEST_MODIFY;
+
+    css_send_request(req);
+    r = css_do_request(req);
+    css_destroy_request(req);
+    return r;
+no_op:
+    kprintf("x2703: Not operational - terminal was disconnected?\n");
+    return -1;
+}
+</pre>
+
+<p>First you have to enable the 2703 with command type 'X27. No flags and it will be a single word command program.</p>
+
+<p>After that write to it like any other normal CCW device, use the WRITE command with your buffer and desired size and you're ready to go.</p>
+
+<p></p>
+
+<a href="mos-ch2.html">Previous</a>
+<a href="mos-ch4.html">Next</a>
+
+</body>
+</html>

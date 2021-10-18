@@ -46,6 +46,8 @@ struct css_ccw1 {
 <p>TIC will loop infinitely when SEARCH fails, when the DASD detects that it has read the entire track it will abnormally exit the channel program.</p>
 <h3>Read key and Data (0x0E)</h3>
 <p>Address is used to point to the destination buffer and length is used to denote the length of data to read.</p>
+<h3>Enable (0x27)</h3>
+<p>Used mostly by telnet terminals to request them to be enabled (start listening/activate send mode).</p>
 
 <h2>Sample command chain</h2>
 <img style="float:left" width="20%" src="s390-ccw.png">

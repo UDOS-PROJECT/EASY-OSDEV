@@ -185,7 +185,7 @@ larl 14, myData
 * 2 uninitialized characters
         DS CL2
 </pre>
-<p>I don't know what the S stands for, perhaps Static?, Storage?</p>
+<p>DS stands for Define Storage while DC stands for Define Character</p>
 
 <h3>Macros</h3>
 <p>HLASM uses macros <b>too often</b>, you'll see definitions like FLCIOA or FLCNPSW and such around HLASM code, those are part of macro libraries. However here is a small set of them defined in GAS syntax:</p>
@@ -201,6 +201,10 @@ larl 14, myData
 
 <h3>Operation modes and states</h3>
 <p>There are 2 states that may be useful to know, the problem state and the supervisor state. The problem state does not allow unprivileged execution of applications - this resembles usermode and can be used to "jail" rogue kernel modules. The supervisor state has full control over the machine and is usually where your kernel will run.</p>
+
+<h2>"Gotchas"</h2>
+<h3>The stack is in reverse</h3>
+<p>On x86 architectures the top of the stack is used as the initial RSP value, in S390 you use the bottom part of the stack instead.</p>
 
 </body>
 </html>
