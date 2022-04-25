@@ -4,68 +4,23 @@
 <link rel="stylesheet" href="default.css">
 </head>
 
-<body>
+<body height="100%">
 
-<h1>Easy OSDev</h1>
+<a href="osdev.html">Looking for the OSDev tutorial?</a>
+<img src="udos-logo.png" style="width:100%;background-color:cyan;">
 
-<ul>
-<li><a href="kernel.html">OS Principles</a></li>
-<li><a href="paging.html">Paging</a></li>
-<li><a href="multitasking.html">Multitasking</a></li>
-<li><a href="virtual-filesystem.html">Virtual Filesystem</a></li>
-<li>ESA S/390(X)<ul>
-<li><a href="s390-basic.html">Basics</a></li>
-<li><a href="s390-css.html">Channel SubSystem</a></li>
-<li><a href="s390-misc.html">Extras</a></li>
-</ul></li>
-<li>MainframeOS<ul>
-<li><a href="mos-ch0.html">Introduction</a></li>
-<li><a href="mos-ch1.html">IPL (aka. the bootloader)</a></li>
-<li><a href="mos-ch2.html">Supervisor Call</a></li>
-<li><a href="mos-ch3.html">Telnet time!</a></li>
-</ul></li>
-</ul>
-<p>There is still a bunch of undocumented stuff - and incomplete pages, this is what i know so far so pardon me :)</p>
+<p>* I tried to draw an Otter, but I drew a racoon instead, task failed sucessfuly</p>
 
-<h2>Running the code</h2>
-<p>There is code you can run on the <a href="https://github.com/udos-project/udos">UDOS repository</a>. See README instructions for running it.</p>
+<p>
+<b>uDOS</b> which stands for <b>Unified Data Operation System</b>. A system whose primary goal
+is to provide an opensource system for documenting the S/390 family architectures - in
+order to promote amateur and experimental operating systems on this obscure archtiecture.
+</p>
 
-<h2>Useful Hercules commands</h2>
-<pre>
-// Enable tracing for DASD
-t+1b9
+<h1>Gallery</h1>
 
-// Enable instruction tracing
-t+
-
-// Boot the DASD
-ipl 1b9
-</pre>
-<p>Notice that Hercules has a DIAG 8 call to print debug statments, you can use it to issue commands to the Hercules console</p>
-
-<h2>Links</h2>
-<ul>
-<li><a href="https://refspecs.linuxbase.org/ELF/zSeries/lzsabi0_s390.html">S390 ELF dynamic linking, ABI and more</a></li>
-<li><a href="http://bitsavers.org/pdf/ibm/3270/GA23-0059-4_3270_Data_Stream_Programmers_Reference_Dec88.pdf">3270 Terminal datastream reference</a></li>
-<li><a href="http://www.prycroft6.com.au/misc/3270eds.html">3270 Terminal Extended datastream reference (with examples)</a></li>
-<li><a href="https://www.prycroft6.com.au/misc/3270.html">3270 Terminal datastream reference (with examples)</a></li>
-<li><a href="https://www.kernel.org/doc/html/v5.3/s390/debugging390.html">Debugging z/Linux, includes ABI information and other stuff</a></li>
-<li><a href="http://www.bitsavers.org/pdf/ibm/dasd/3310/GA26-1660-1_3310_Direct_Access_Storage_Reference_Manual_197903.pdf">DASD 3310 full programming reference</a></li>
-</ul>
-
-<h2>Principles of Operation</h2>
-<p>These are documents which describes the architecture of different S390 versions (there is the S360, the dinosaur of dinosaurs, the Z/ARCH, the most modern mainframe) and so on, S360 being the oldest, followed by the S370, S390 and finally Z/ARCH as the newest shiny architecture.</p>
-<p>Note that S390 is being used in this page as a global "catch-all" for both z/Arch and S3X0 series. z/Architecture runs the operating system on LPARs while the 3X0 series runs it on baremetal.</p>
-<p>In addition, the S3X0 series in itself is pretty different, for example the S360 uses SIO/TIO instructions and lacks dynamic address translation, while future models (S370 and S390) do have DAT and use a different subchannel method.</p>
-<ul>
-<li><a href="https://www.ibm.com/docs/en/SSQ2R2_15.0.0/com.ibm.tpf.toolkit.hlasm.doc/dz9zr006.pdfe">z/Arch</a></li>
-<li><a href="http://bitsavers.org/pdf/ibm/370/princOps/GA22-7000-10_370_Principles_of_Operation_Sep87.pdf">System/370 (Extended)</a></li>
-<li><a href="http://bitsavers.org/pdf/ibm/370/MVS/GA22-7079-1_IBM_System_370_Assists_for_MVS_Oct81.pdf">System/370</a></li>
-<li><a href="http://www.bitsavers.org/pdf/ibm/370/princOps/SA22-7085-0_370-XA_Principles_of_Operation_Mar83.pdf">System/370</a></li>
-<li><a href="http://bitsavers.org/pdf/ibm/370/princOps/SA22-7085-1_370-XA_Principles_of_Operation_Jan87.pdf">System/370 (Extended)</a></li>
-<li><a href="http://bitsavers.org/pdf/ibm/370/princOps/SA22-7200-0_370-ESA_Principles_of_Operation_Aug88.pdf">Systems/390</a></li>
-<li><a href="http://publibz.boulder.ibm.com/epubs/pdf/dz9ar008.pdf">System/390 (EPUB)</a></li>
-</ul>
+<img src="udos-1.png">
+<img src="udos-2.png">
 
 </body>
 </html>
